@@ -1,0 +1,21 @@
+# Ignore everything
+*
+
+
+!.gitignore
+!src/
+!src/**
+!.env.example
+!README.md
+
+
+
+.env
+.venv/
+.vscode/
+agent.txt
+chatopenai.txt
+mcpclient.txt
+uv.lock
+src/__pycache__/
+
