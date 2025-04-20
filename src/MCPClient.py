@@ -37,11 +37,13 @@ class MCPClient:
                 await self.exit_stack.aclose()
             except asyncio.CancelledError:
                 # 忽略cancel错误，这通常发生在尝试关闭子进程时
-                print("注意: MCP客户端关闭时出现了cancel错误，这是正常的，请忽略")
+                print("")
             except Exception:
-                rprint("Error during MCP client close, traceback and continue!")
+                # Error during MCP client close, traceback and continue!
+                rprint("")
         except Exception as e:
-            print(f"关闭MCP客户端时出现其他错误: {str(e)}")
+            # f"关闭MCP客户端时出现其他错误: {str(e)}"
+            print("")
 
     def get_tools(self) -> list[Tool]:
         return self.tools

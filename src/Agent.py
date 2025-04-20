@@ -42,6 +42,7 @@ class Agent:
         self.llm = ChatOpenAI(
             self.model,
             self.system_prompt,
+            # 告诉大模型有哪些工具
             tools,
             self.context
         )
@@ -67,13 +68,14 @@ class Agent:
         
         # 根据系统提示词和上下文，生成初始prompt，会包括当前agent注册了哪些mcp server
         # 就类似cursor，cline中的mcp.json
-        # 可以让大模型知道自己可以调用哪些mcp server
+
+        # 此时的大模型是知道自己可以调用哪些tools
         response = await self.llm.chat(prompt)
 
-        echo = 0
+        # echo = 0
         while True:
-            print(f"======================echo: {echo}=======================")
-            echo += 1
+            # print(f"======================echo: {echo}=======================")
+            # echo += 1
 
             if response["tool_calls"]:
                 for tool_call in response["tool_calls"]:
@@ -145,18 +147,18 @@ async def example() -> None:
                 print(f"初始化 {mcp_tool} 客户端时出错: {e}，跳过此客户端")
 
         if not enabled_mcp_clients:
-            print("警告: 没有任何MCP客户端初始化成功")
+            print("没有MCP Server")
             return
 
         agent = Agent(
             model="deepseek/deepseek-chat-v3-0324",
             mcp_clients=enabled_mcp_clients,
-            system_prompt="回答之前先叫一声龙哥好！你可以使用person服务的my_mcp_server工具来获取人物信息，只需要提供名字即可。"
+            system_prompt=""
         )
         await agent.init()
 
         res = await agent.invoke(
-            "龙哥，你能告诉我关于张三这个人的信息吗？使用person服务的my_mcp_server工具查询。之后在帮我爬取 https://sports.qq.com 网站的NBA最近发生的大事件，并用中文告诉我。在帮我上网查一下马猴烧酒是啥意思，还有114514是啥意思"
+            "请告诉我张三是一个怎么样的人？ 之后在帮我爬取 https://sports.qq.com 网站的NBA最近发生的大事件，并用中文告诉我。"
         )
 
         sys.exit(0)
